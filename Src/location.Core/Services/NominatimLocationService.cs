@@ -16,7 +16,9 @@ namespace location.Core.Services
     {
         private const string URL = "http://nominatim.openstreetmap.org/reverse";
         private const string URL_PARAMS = "?format=json&lat={0}&lon={1}";
-        
+
+        private const string DEFAULT_USER_AGENT = "location/1.0";
+
         private readonly ILogger<NominatimLocationService> _logger;
         private readonly HttpClient _httpClient;
 
@@ -25,7 +27,12 @@ namespace location.Core.Services
         {
             _logger = logger;
             _httpClient = httpClientProvider.Get();
-            _httpClient.DefaultRequestHeaders.Add("user-agent", "custom location app");
+
+            var userAgent = Environment.GetEnvironmentVariable("LOCATION_USER_AGENT")
+                ?? DEFAULT_USER_AGENT;
+
+            _logger.LogInformation("UserAgent: " + userAgent);
+            _httpClient.DefaultRequestHeaders.Add("user-agent", userAgent);
         }
 
         public async Task<Entities.Address> Get(double latitude, double longitude, string locale)

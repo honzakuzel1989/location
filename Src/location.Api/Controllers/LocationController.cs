@@ -26,11 +26,11 @@ namespace location.Controllers
         }
 
         [HttpGet("Reverse")]
-        public async Task<IActionResult> Reverse(double latitude, double longitude, string locale = "en")
+        public async Task<IActionResult> Reverse(double latitude, double longitude)
         {
-            var location = await _locationService.Get(latitude, longitude, locale);
+            var location = await _locationService.Get(latitude, longitude);
 
-            _logger.LogInformation($"Reversing coordinance {latitude}, {longitude} with locale {locale}...");
+            _logger.LogInformation($"Reversing coordinance {latitude}, {longitude}");
 
             return new JsonResult(new 
             {

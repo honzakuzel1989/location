@@ -25,17 +25,11 @@ namespace location.Core.Services
         {
             _logger = logger;
             _httpClient = httpClientProvider.Get();
-
-            _httpClient.DefaultRequestHeaders.UserAgent.Clear();
-            _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("curl", "7.68.0"));
         }
 
-        public async Task<Entities.Address> Get(double latitude, double longitude, string locale)
+        public async Task<Entities.Address> Get(double latitude, double longitude)
         {
-            _logger.LogInformation($"Getting address from coordinance {latitude},{longitude} in locale {locale}");
-
-            _httpClient.DefaultRequestHeaders.AcceptLanguage.Clear();
-            _httpClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue(locale));
+            _logger.LogInformation($"Getting address from coordinance {latitude},{longitude}");
 
             var url = string.Format(CultureInfo.InvariantCulture, URL + URL_PARAMS, latitude, longitude);
             var result = await _httpClient.GetStringAsync(url);
